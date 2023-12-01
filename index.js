@@ -11,11 +11,23 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB (replace 'your-mongodb-uri' with your actual MongoDB connection URI)
-mongoose.connect(process.env.MONGO_URL);
-const db = mongoose.connection;
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URL);
+    console.log("DB connected");
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    process.exit(1); // Exiting with a non-zero code to indicate an error
+  }
+};
 
-db.on('error', (error) => console.error(error));
-db.once('open', () => console.log('Connected to MongoDB'));
+connectDB();
+
+// mongoose.connect(process.env.MONGO_URL);
+// const db = mongoose.connection;
+
+// db.on('error', (error) => console.error(error));
+// db.once('open', () => console.log('Connected to MongoDB'));
 
 // Middleware
 app.use(bodyParser.json());
